@@ -16,6 +16,7 @@ contract TicTacToe {
 
     event MoveMade (address byPlayer, uint8 x_coor, uint8 y_coor);
     event GameOver(address winner);
+    event GameTied();
 
     modifier isPlayer() {
         require(msg.sender == players[0] || msg.sender == players[1]);
@@ -30,11 +31,6 @@ contract TicTacToe {
     modifier isActivePlayer() {
         require(msg.sender == activePlayer);
         _;
-    }
-
-    // test func
-    function whoAmI() public view returns(address) {
-        return msg.sender;
     }
 
     // Start a new game
@@ -103,6 +99,13 @@ contract TicTacToe {
         GameOver(msg.sender);
     }
 
+    function claimDraw() public {
+        require(isDraw());
+        
+        gameState = GameState.GameOver;
+        GameTied();
+    }
+
     function getPlayerNumber() private view returns(uint8) {
         return msg.sender == players[0] ? 1 : 2;
     }
@@ -113,6 +116,25 @@ contract TicTacToe {
 
     function isMyTurn() public view isPlayer returns(bool) {
         return activePlayer == msg.sender;
+    }
+
+    function isDraw() public view returns(bool) {
+        if (isPlayerVictorious(1) || isPlayerVictorious(2)) {
+            return false;
+        }
+
+        for (uint x = 0; x < 3; x++) {
+            for (uint y = 0; y < 3; y++) {
+                if (board[x][y] == 0) {
+                    // You can still put more pieces on the board
+                    // so we're not calling a draw yet
+                    return false;
+                }
+            }
+        }
+
+        // board is full and no one won.  It's a draw
+        return true;
     }
 
     function isPlayerVictorious(uint8 playerNum) private view returns(bool) {
