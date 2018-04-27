@@ -5,7 +5,7 @@ One person sets up a game by deploying the contract and waiting for someone to j
 
 Any player can join the game by calling joinGame()
 
-Players then take turns placing their piece on the game board by sending in the x,y coordinate corresponding to the square they wish to claim (where 0<=x,y<=2)
+Players then take turns placing their piece on the game board by sending in the x,y coordinate corresponding to the square they wish to claim, where 0<=x,y<=2. (There was supposed to be a UI that would hide the coordinate system but I didn't have time to work on that).
 
 When a player wins he can call claimVictory() to claim the win. In the case of a draw claimDraw() can be called instead.
 
